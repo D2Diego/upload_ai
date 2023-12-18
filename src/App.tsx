@@ -14,8 +14,7 @@ export function App() {
         <h1 className="text-xl font-bold">Upload.ai</h1>
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">Desenvolvido como Projeto Pessoal
-          </span>
+          <span className="text-sm text-muted-foreground">Desenvolvido como Projeto Pessoal</span>
 
           <Separator orientation='vertical' className='h-6'/>
 
