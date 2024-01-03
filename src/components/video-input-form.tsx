@@ -6,9 +6,11 @@ import { Button } from './ui/button'
 import { ChangeEvent, FormEvent, useMemo, useRef, useState } from 'react'
 import { getFFmpeg } from '@/lib/ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
+import { api } from '@/lib/axios'
 
 export function VideoInputForm(){
   const [videoFile, setVideoFile] = useState<File | null>(null)
+
   const promptInputRef = useRef<HTMLTextAreaElement>(null)
 
   function handleFileSelected(event: ChangeEvent<HTMLInputElement>){
@@ -75,7 +77,20 @@ export function VideoInputForm(){
 
     //Convertendo vídeo em áudio
     const audioFile = await convertVideoToAudio(videoFile)
-    console.log(audioFile)
+    
+    const data = new FormData()
+
+    data.append('file', audioFile)
+
+    const response = await api.post('/videos', data)
+
+    const videoId = response.data.video.id
+
+    await api.post(`video/${videoId}/trasncription`,{
+      prompt
+    })
+
+    console.log('Finalizou')
   }
 
   const previewURL = useMemo(() => {
@@ -106,6 +121,9 @@ export function VideoInputForm(){
         )}
       </label>
 
+      <input type="file" id="video" accept="video/mp4" className="sr-only" onChange={handleFileSelected} />
+
+      <Separator />
       <input type="file" id="video" accept="video/mp4" className="sr-only" onChange={handleFileSelected} />
 
           <Separator/>
